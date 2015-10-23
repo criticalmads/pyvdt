@@ -1,6 +1,17 @@
 PyVDT: a reimplementation of the Visual Monitoring Task (VMT; Knutson et al., 1991) using PsychoPy.
 
+SYNOPSIS
 The PyVDT, like the VMT, displays single digits, one at a time, on a computer monitor, and participants are instructed to press a key whenever an ”even-odd-even” pattern of digits is displayed.
+
+SOFTWARE REQUIREMENTS
+PsychoPy (http://www.psychopy.org/).
+
+CONFIGURATION
+Adjust configuration options inside pyvdt.ini.
+
+HOW TO USE
+Open pyvdt.py inside PsychoPy.
+Click the green icon to run the code.
 
 -----
 Knutson, J. F., Hinrichs, J. V., Tyler, R. S., Gantz, B. J., Schartz, H. A., & Woodworth, G. (1991). Psychological predictors of audiological outcomes of multichannel cochlear implants: preliminary findings. The Annals of Otology, Rhinology, and Laryngology, 100(10), 817–822. http://doi.org/10.1177/000348949110001006
