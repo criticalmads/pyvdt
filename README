@@ -12,6 +12,7 @@ Adjust configuration options (screen resolution and refresh rate) inside pyvdt.i
 HOW TO USE
 Open pyvdt.py inside PsychoPy.
 Click the green icon to run the code.
+The program outputs sensitivity measures (d') and diagnostics to .csv files in the program directory.
 
 -----
 Knutson, J. F., Hinrichs, J. V., Tyler, R. S., Gantz, B. J., Schartz, H. A., & Woodworth, G. (1991). Psychological predictors of audiological outcomes of multichannel cochlear implants: preliminary findings. The Annals of Otology, Rhinology, and Laryngology, 100(10), 817–822. http://doi.org/10.1177/000348949110001006
