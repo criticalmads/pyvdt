@@ -7,7 +7,7 @@ SOFTWARE REQUIREMENTS
 PsychoPy (http://www.psychopy.org/).
 
 CONFIGURATION
-Adjust configuration options inside pyvdt.ini.
+Adjust configuration options (screen resolution and refresh rate) inside pyvdt.ini.
 
 HOW TO USE
 Open pyvdt.py inside PsychoPy.
