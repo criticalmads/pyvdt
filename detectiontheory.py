@@ -34,7 +34,7 @@ from scipy.stats import norm
 # See Macmillan & Creelman "Detection Theory: A User's Guide", 2nd edition,
 # pp. 8-9.
 #
-# d' = 4.65 is considered an effective ceiling (Macmillan & Creelman, 2008, p. 8)
+# d' = 4.65 is considered an effective maximum (Macmillan & Creelman, 2008, p. 8)
 
 def Hrate(hits, misses, adjustment=False):
     """Calculates and returns H (hit rate)"""
