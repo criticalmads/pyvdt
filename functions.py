@@ -27,17 +27,20 @@ original copyright notices within the source code files.
 """
 
 
+from psychopy import visual # import psychopy.visual before any other libraries, so that avbin.dll is loaded correctly (Windows)
 import math # floor() is used for rounding down
-from psychopy import core, data, event, visual, gui
+import random
+#from psychopy import core, data, event, visual, gui
+from psychopy import core, event
 import psychopy.log
-from numpy import *
+#from numpy import *
 import csv
 
 def vmtDigits(presentationRate,duration):
     #calculate number of digits to present
     numDigits=duration/presentationRate
     #generate random digits
-    randomDigits = randint(1,9,size=numDigits)
+    randomDigits = random.randint(1,9,size=numDigits)
     return randomDigits
 
 def vmtTargets(vmtDigits): #Identifies even-odd-even sequences (targets) in a list of digits
@@ -62,8 +65,8 @@ def calculateDigitPresentationRate(vmtRate,monitorRefreshRate):
 
 def vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontHeight,vmtFrameLogfile):
     # stimuli
-    digitStim = visual.TextStim(myWin,text="",color='black',
-                                font=fontFace,height=fontHeight)
+    #digitStim = visual.TextStim(myWin,text="",color='black',
+     #                           font=fontFace,height=fontHeight)
                   
     digitStim0 = visual.TextStim(myWin,text="0",color='black',
                                 font=fontFace,height=fontHeight)
@@ -108,7 +111,8 @@ def vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontH
 
     signal = vmtTargets(listOfDigits)
     
-    vmtOutput = zeros(((vmtDuration/vmtRate),17))#set up numpy array in which to store data
+#    vmtOutput = zeros(((vmtDuration/vmtRate),17))#set up numpy array in which to store data
+    vmtOutput = [[0 for x in range(17)] for x in range(vmtDuration/vmtRate)] 
     vmtOutputSum = {'hits': 0,
                     'misses': 0,
                     'falseAlarms': 0,
@@ -158,7 +162,7 @@ def vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontH
             currentDigitSpaceTimestamp = 0
             currentDigitDecision=0
         
-        quitKeys = event.getKeys(["q"])
+        quitKeys = event.getKeys(["q"]) # To abort testing, press q
         if len(quitKeys)>0: core.quit()
     
         myWin.clearBuffer()
@@ -194,24 +198,24 @@ def vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontH
     
         
         #TrialNumber Hit Miss FalseAlarm CorrectRejection ShownDigit Signal Decision TrialDuration DigitStart DigitEnd DigitDuration DecisionTimestamp BlinkStart BlinkEnd BlinkDuration RT
-        vmtOutput[digitCounter,0] = digitCounter+1
-        vmtOutput[digitCounter,1] = hit
-        vmtOutput[digitCounter,2] = miss
-        vmtOutput[digitCounter,3] = falseAlarm
-        vmtOutput[digitCounter,4] = correctRejection
-        vmtOutput[digitCounter,5] = currentDigit
-        vmtOutput[digitCounter,6] = signal[digitCounter]
-        vmtOutput[digitCounter,7] = currentDigitDecision
-        vmtOutput[digitCounter,8] = (currentBlinkEndTimestamp-currentDigitStartTimestamp)
-        vmtOutput[digitCounter,9] = currentDigitStartTimestamp
-        vmtOutput[digitCounter,10] = currentDigitEndTimestamp
-        vmtOutput[digitCounter,11] = (currentDigitEndTimestamp-currentDigitStartTimestamp)
-        vmtOutput[digitCounter,12] = currentDigitSpaceTimestamp
-        vmtOutput[digitCounter,13] = currentBlinkStartTimestamp
-        vmtOutput[digitCounter,14] = currentBlinkEndTimestamp
-        vmtOutput[digitCounter,15] = (currentBlinkEndTimestamp-currentBlinkStartTimestamp)
-        if currentDigitDecision==1: vmtOutput[digitCounter,16] = (currentDigitSpaceTimestamp-currentDigitStartTimestamp)
-        else: vmtOutput[digitCounter,16] = -1 # space wasn't pressed; -1 is removed from the output file
+        vmtOutput[digitCounter][0] = digitCounter+1
+        vmtOutput[digitCounter][1] = hit
+        vmtOutput[digitCounter][2] = miss
+        vmtOutput[digitCounter][3] = falseAlarm
+        vmtOutput[digitCounter][4] = correctRejection
+        vmtOutput[digitCounter][5] = currentDigit
+        vmtOutput[digitCounter][6] = signal[digitCounter]
+        vmtOutput[digitCounter][7] = currentDigitDecision
+        vmtOutput[digitCounter][8] = (currentBlinkEndTimestamp-currentDigitStartTimestamp)
+        vmtOutput[digitCounter][9] = currentDigitStartTimestamp
+        vmtOutput[digitCounter][10] = currentDigitEndTimestamp
+        vmtOutput[digitCounter][11] = (currentDigitEndTimestamp-currentDigitStartTimestamp)
+        vmtOutput[digitCounter][12] = currentDigitSpaceTimestamp
+        vmtOutput[digitCounter][13] = currentBlinkStartTimestamp
+        vmtOutput[digitCounter][14] = currentBlinkEndTimestamp
+        vmtOutput[digitCounter][15] = (currentBlinkEndTimestamp-currentBlinkStartTimestamp)
+        if currentDigitDecision==1: vmtOutput[digitCounter][16] = (currentDigitSpaceTimestamp-currentDigitStartTimestamp)
+        else: vmtOutput[digitCounter][16] = -1 # space wasn't pressed; -1 is removed from the output file
         digitCounter += 1
     
     myWin.saveFrameIntervals(vmtFrameLogfile)

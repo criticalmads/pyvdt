@@ -55,26 +55,26 @@ def vmtRawScoreOutput(vmtOutput,outputFilename):
                         'RT'])
     
     for i, obj in enumerate(vmtOutput):
-        if vmtOutput[i,16] == -1:
+        if vmtOutput[i][16] == -1:
             RT=""
         else:
-            RT=vmtOutput[i,16]
-        outputCsvCurrentRow =   [int(vmtOutput[i,0]),
-                                 int(vmtOutput[i,1]),
-                                 int(vmtOutput[i,2]),
-                                 int(vmtOutput[i,3]),
-                                 int(vmtOutput[i,4]),
-                                 int(vmtOutput[i,5]),
-                                 int(vmtOutput[i,6]),
-                                 int(vmtOutput[i,7]),
-                                 vmtOutput[i,8],
-                                 vmtOutput[i,9],
-                                 vmtOutput[i,10],
-                                 vmtOutput[i,11],
-                                 vmtOutput[i,12],
-                                 vmtOutput[i,13],
-                                 vmtOutput[i,14],
-                                 vmtOutput[i,15],
+            RT=vmtOutput[i][16]
+        outputCsvCurrentRow =   [int(vmtOutput[i][0]),
+                                 int(vmtOutput[i][1]),
+                                 int(vmtOutput[i][2]),
+                                 int(vmtOutput[i][3]),
+                                 int(vmtOutput[i][4]),
+                                 int(vmtOutput[i][5]),
+                                 int(vmtOutput[i][6]),
+                                 int(vmtOutput[i][7]),
+                                 vmtOutput[i][8],
+                                 vmtOutput[i][9],
+                                 vmtOutput[i][10],
+                                 vmtOutput[i][11],
+                                 vmtOutput[i][12],
+                                 vmtOutput[i][13],
+                                 vmtOutput[i][14],
+                                 vmtOutput[i][15],
                                  RT]
         #outputCsv.writerow(vmtOutput[i,])
         outputCsv.writerow(outputCsvCurrentRow)

@@ -30,17 +30,13 @@ original copyright notices within the source code files.
 #TODO: log win.frameintervals
 
 
-from numpy import *
-from numpy.random import *
-import os
-from psychopy import core, data, event, visual, gui
+#from psychopy import core, data, event, visual, gui
+from psychopy import visual # import psychopy.visual before any other libraries, so that avbin.dll is loaded correctly (Windows)
+from psychopy import core, data, gui
 import psychopy.log
-import pylab
-import csv
 import functions as vmt
-#import uuid
 from ConfigParser import ConfigParser
-import csvfunc
+import csvfunc as vmtcsv
 
 #----------------CONFIG START----------------
 config = ConfigParser()
