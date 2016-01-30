@@ -1,4 +1,4 @@
-PyVDT: a reimplementation of the Visual Monitoring Task (VMT; Knutson et al., 1991) using PsychoPy.
+PyVDT: a PsychoPy-based reimplementation of the Visual Monitoring Task (VMT; Knutson et al., 1991).
 
 SYNOPSIS
 The PyVDT, like the VMT, displays single digits, one at a time, on a computer monitor, and participants are instructed to press a key whenever an ”even-odd-even” pattern of digits is displayed.
