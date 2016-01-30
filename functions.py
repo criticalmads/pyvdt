@@ -32,7 +32,7 @@ import math # floor() is used for rounding down
 import random
 #from psychopy import core, data, event, visual, gui
 from psychopy import core, event
-import psychopy.log
+import psychopy.logging
 #from numpy import *
 import csv
 
@@ -126,7 +126,7 @@ def vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontH
     event.clearEvents(eventType='keyboard')
     #TODO: clear screen buffer as well?
     
-    psychopy.log.setDefaultClock(trialClock) # make log timestamps start at the beginning of the test instead of at the beginning of the program
+    psychopy.logging.setDefaultClock(trialClock) # make log timestamps start at the beginning of the test instead of at the beginning of the program
     myWin.setRecordFrameIntervals()
     
     digitFrames = calculateDigitPresentationRate(vmtRate,monitorRefreshRate)

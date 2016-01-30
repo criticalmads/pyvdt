@@ -33,7 +33,7 @@ original copyright notices within the source code files.
 #from psychopy import core, data, event, visual, gui
 from psychopy import visual # import psychopy.visual before any other libraries, so that avbin.dll is loaded correctly (Windows)
 from psychopy import core, data, gui
-import psychopy.log
+import psychopy.logging
 import functions as vmt
 from ConfigParser import ConfigParser
 import csvfunc as vmtcsv
@@ -117,10 +117,10 @@ else:
 
 vmtLogfile = open(outputFilePrefix+subjNumber+subjName+".log",'a')
 vmtFrameLogfile = outputFilePrefix+subjNumber+subjName+"-frames.log"
-psychopy.log.LogFile(f=vmtLogfile,level=0)
-psychopy.log.info("Subject name: "+subjName)
-psychopy.log.info("Subject number: "+subjNumber)
-psychopy.log.info("Comment: "+subjComment)
+psychopy.logging.LogFile(f=vmtLogfile,level=0)
+psychopy.logging.info("Subject name: "+subjName)
+psychopy.logging.info("Subject number: "+subjNumber)
+psychopy.logging.info("Comment: "+subjComment)
 
 VMTdigitSeqs1 = vmt.VMTdigitSequences("pyvdtSequences-rate1.csv")
 listOfDigits1 = VMTdigitSeqs1[vmt1LineNumber]
