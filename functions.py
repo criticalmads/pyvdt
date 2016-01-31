@@ -225,6 +225,83 @@ def vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontH
     
     return vmtOutput, vmtOutputSum
 
+#----self-test start---
+
+def selftest(listOfDigits,vmtDuration,vmtRate):
+    
+    signal = vmtTargets(listOfDigits)
+    
+    vmtOutput = [[0 for x in range(17)] for x in range(vmtDuration/vmtRate)] 
+    vmtOutputSum = {'hits': 0,
+                    'misses': 0,
+                    'falseAlarms': 0,
+                    'correctRejections': 0}
+
+    
+    digitCounter = 0
+    currentDigit = 0
+    
+    while digitCounter<(vmtDuration/vmtRate):
+        #myWin.logOnFlip("Digit "+str(digitCounter+1)+" START", psychopy.log.WARNING)
+    
+        currentDigit = listOfDigits[digitCounter]
+    
+        currentDigitDecision = random.randint(0,1)
+        
+        
+        if signal[digitCounter] == 1 and currentDigitDecision == 1:
+            hit=1
+            miss=0
+            falseAlarm=0
+            correctRejection=0
+        if signal[digitCounter] == 1 and currentDigitDecision == 0:
+            hit=0
+            miss=1
+            falseAlarm=0
+            correctRejection=0
+        if signal[digitCounter] == 0 and currentDigitDecision == 1:
+            hit=0
+            miss=0
+            falseAlarm=1
+            correctRejection=0
+        if signal[digitCounter] == 0 and currentDigitDecision == 0:
+            hit=0
+            miss=0
+            falseAlarm=0
+            correctRejection=1
+    
+        vmtOutputSum['hits'] += hit
+        vmtOutputSum['misses'] += miss
+        vmtOutputSum['falseAlarms'] += falseAlarm
+        vmtOutputSum['correctRejections'] += correctRejection
+    
+        
+        #TrialNumber Hit Miss FalseAlarm CorrectRejection ShownDigit Signal Decision TrialDuration DigitStart DigitEnd DigitDuration DecisionTimestamp BlinkStart BlinkEnd BlinkDuration RT
+        vmtOutput[digitCounter][0] = digitCounter+1
+        vmtOutput[digitCounter][1] = hit
+        vmtOutput[digitCounter][2] = miss
+        vmtOutput[digitCounter][3] = falseAlarm
+        vmtOutput[digitCounter][4] = correctRejection
+        vmtOutput[digitCounter][5] = currentDigit
+        vmtOutput[digitCounter][6] = signal[digitCounter]
+        vmtOutput[digitCounter][7] = currentDigitDecision
+        vmtOutput[digitCounter][8] = 0
+        vmtOutput[digitCounter][9] = 0
+        vmtOutput[digitCounter][10] = 0
+        vmtOutput[digitCounter][11] = 0
+        vmtOutput[digitCounter][12] = 0
+        vmtOutput[digitCounter][13] = 0
+        vmtOutput[digitCounter][14] = 0
+        vmtOutput[digitCounter][15] = 0
+        vmtOutput[digitCounter][16] = 0
+        digitCounter += 1
+    
+    return vmtOutput, vmtOutputSum
+
+
+#----self-test end-----
+
+
 def showText(myWin,textToShow,fontFace):
     try: textClock
     except NameError:
