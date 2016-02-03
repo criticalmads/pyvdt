@@ -33,6 +33,7 @@ original copyright notices within the source code files.
 #from psychopy import core, data, event, visual, gui
 from psychopy import visual # import psychopy.visual before any other libraries, so that avbin.dll is loaded correctly (Windows)
 from psychopy import core, data, gui
+from psychopy.tools.plottools import plotFrameIntervals
 import psychopy.logging
 import functions as vmt
 from ConfigParser import ConfigParser
@@ -83,8 +84,9 @@ optionsDialog.addField('Comment:')
 optionsDialog.addField('Output file prefix:',outputFilePrefix,tip='Prefix to add to output files')
 optionsDialog.addField('Language:', language,tip='Valid entries are en (English) and da (Danish)')
 
-optionsDialog.addField('Self-test mode',"n",tip='Set to "y" to generate output data')
+optionsDialog.addField('Self-test mode',"n",tip='Set to "y" to generate output data; "p" to plot frame log file')
 optionsDialog.addField('No. of iterations',"5",tip='The number of random subjects to generate')
+optionsDialog.addField('Frame log file to plot',"pyvdt-test-frames.log")
 
 optionsDialog.addText('')
 optionsDialog.addText('PyVDT')
@@ -113,6 +115,7 @@ if optionsDialog.OK:
     
     testMode = optionsDialog.data[10]
     testIterations = optionsDialog.data[11]
+    frameLogFile = optionsDialog.data[12]
 else:
     core.quit()
 
@@ -175,6 +178,12 @@ if testMode == "y":
                               testOutputFilenameAppend)
     print "Self-test done."
     core.quit()
+    
+if testMode == "p":
+    with open(frameLogFile, 'r') as f:
+        frameLog = f.readline()
+    frameLog = frameLog.split(",")
+    plotFrameIntervals(frameLog)
     
 else:
     myWin = visual.Window((resolutionX,resolutionY),
@@ -267,4 +276,5 @@ else:
     core.wait(intervalBetweenTrials)
     #Show endText
     vmt.showText(myWin,endText,fontFace)
+    psychopy.tools.plottools.plotFrameIntervals(intervals)
     core.quit()

@@ -327,8 +327,8 @@ def showText(myWin,textToShow,fontFace):
                 #abort routine on response
                 continueInstruct=False
                 #check for quit (the [Esc] key)
-                #introEsc = introKeypresses(["escape"]) #TODO: fix this (causes TypeError: 'list' object is not callable)
-                #if len(introEsc)>0: core.quit()
+                #print keypresses(["escape"]) #TODO: fix this (causes TypeError: 'list' object is not callable)
+                if keypresses[0] == "escape": core.quit()
         #refresh the screen
         myWin.flip()
 
