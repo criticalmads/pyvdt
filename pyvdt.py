@@ -27,11 +27,9 @@ original copyright notices within the source code files.
 """
 
 
-#TODO: log win.frameintervals
-
-
-#from psychopy import core, data, event, visual, gui
-from psychopy import visual # import psychopy.visual before any other libraries, so that avbin.dll is loaded correctly (Windows)
+# Import psychopy.visual first,
+# so that avbin.dll is loaded correctly (Windows).
+from psychopy import visual
 from psychopy import core, data, gui
 from psychopy.tools.plottools import plotFrameIntervals
 import psychopy.logging
@@ -39,7 +37,7 @@ import functions as vmt
 from ConfigParser import ConfigParser
 import csvfunc as vmtcsv
 
-#----------------CONFIG START----------------
+# ----------------CONFIG START----------------
 config = ConfigParser()
 config.read('pyvdt.ini')
 
@@ -49,29 +47,30 @@ resolutionX = int(config.get('monitor','resolutionX'))
 resolutionY = int(config.get('monitor','resolutionY'))
 optFullscreen = int(config.get('monitor','fullscreen'))
 
-monitorRefreshRate = int(config.get('monitor','refreshRateHz')) #Monitor refresh rate in Hz; used to calculate how many frames to present stimuli for
+# Monitor refresh rate in Hz.
+# This is used to calculate how many frames to present stimuli for.
+monitorRefreshRate = int(config.get('monitor','refreshRateHz'))
 
-vmtRate1 = int(config.get('detectiontask','rate1')) #Digit presentation rate in seconds; actual rate depends on monitor refresh rate
+# Digit presentation rate in seconds.
+# Actual rate depends on monitor refresh rate.
+vmtRate1 = int(config.get('detectiontask','rate1'))
 vmtRate2 = int(config.get('detectiontask','rate2'))
-vmtDuration = int(config.get('detectiontask','duration')) #2 minutes and 32 seconds (Knutson et al., 1991); used to calculate how many digits to present
+# vmtDuration is used to calculate how many digits to present.
+# Default duration is 2 minutes and 32 seconds (see Knutson et al., 1991).
+vmtDuration = int(config.get('detectiontask','duration'))
 
 outputFilePrefix = config.get('misc','outputPrefix')
-#outputFileUUID = uuid.uuid4()
 
-#listOfDigits = config.get('vmtTargets','1')
-
-#logDir=""
 fontHeight = 16
 fontFace = ['Liberation Serif','Times New Roman','Verdana','Arial'] #use the first font found
 intervalBetweenTrials=2
-#----------------- CONFIG END-----------------
+# ----------------- CONFIG END-----------------
 
 # ------------------ additional config start -------------------
-
 optionsDialog = gui.Dlg(title="PyVDT",size=(400,400))
 optionsDialog.addText('Subject info')
 optionsDialog.addField('Name:')
-optionsDialog.addField('Subject number:')#use number of lines in output file as default value
+optionsDialog.addField('Subject number:')
 
 optionsDialog.addText('Experiment Info')
 optionsDialog.addField('Presentation rate (1st test):',vmtRate1,tip='The number of seconds for which to display digits during the first test')
@@ -96,12 +95,10 @@ optionsDialog.addText('This program is free software, and you are welcome')
 optionsDialog.addText('to redistribute it under certain conditions.')
 optionsDialog.addText('See LICENSE for further details.')
 
-
-
 optionsDialog.show()
 if optionsDialog.OK:
-    subjName = optionsDialog.data[0] #TODO: generate uuid if unset
-    subjNumber = optionsDialog.data[1] #TODO: generate uuid if unset
+    subjName = optionsDialog.data[0]
+    subjNumber = optionsDialog.data[1]
     
     vmtRate1 = optionsDialog.data[2]
     vmt1LineNumber = optionsDialog.data[3]-1
@@ -110,7 +107,7 @@ if optionsDialog.OK:
     
     monitorRefreshRate = optionsDialog.data[6]
     subjComment = optionsDialog.data[7]
-    outputFilePrefix = optionsDialog.data[8] #TODO: generate uuid if unset
+    outputFilePrefix = optionsDialog.data[8]
     language = optionsDialog.data[9]
     
     testMode = optionsDialog.data[10]
@@ -118,11 +115,6 @@ if optionsDialog.OK:
     frameLogFile = optionsDialog.data[12]
 else:
     core.quit()
-
-#TODO: fix unicode strings; replacing unicode chars is not optimal
-#subjName=unicode(subjName,errors='replace')
-#subjNumber=unicode(subjNumber,errors='replace')
-#subjComment=unicode(subjComment,errors='replace')
 
 vmtLogfile = open(outputFilePrefix+subjNumber+subjName+".log",'a')
 vmtFrameLogfile = outputFilePrefix+subjNumber+subjName+"-frames.log"
@@ -137,7 +129,6 @@ listOfDigits1 = VMTdigitSeqs1[vmt1LineNumber]
 VMTdigitSeqs2 = vmt.VMTdigitSequences("pyvdtSequences-rate2.csv")
 listOfDigits2 = VMTdigitSeqs2[vmt2LineNumber]
 
-#TODO: fix unicode strings
 introductionText = unicode(config.get(language,'introText'),errors='replace')
 pauseText = unicode(config.get(language,'pauseText'),errors='replace')
 endText = unicode(config.get(language,'endText'),errors='replace')
@@ -148,10 +139,6 @@ outputFilename1 = outputFilePrefix+vmtDate+"-1.csv"
 outputFilenameAppend1 = outputFilePrefix+"data-1.csv"
 outputFilename2 = outputFilePrefix+vmtDate+"-2.csv"
 outputFilenameAppend2 = outputFilePrefix+"data-2.csv"
-
-
-#listOfDigits = vmt(vmtRate,vmtDuration) #TODO: don't use hardcoded list of targets
-#listOfDigits = [7, 1, 5, 1, 0, 5, 6, 1, 8, 0, 7, 1, 2, 5, 1, 4, 5, 1, 5, 0, 7, 6, 4, 3, 4, 0, 4, 8, 3, 2, 8, 1, 5, 3, 2, 6, 0, 6, 3, 2, 0, 8, 7, 6, 2, 6, 3, 7, 0, 1, 7, 1, 4, 8, 1, 6, 2, 4, 5, 0, 6, 4, 0, 7, 0, 6, 3, 5, 3, 2, 4, 2, 1, 4, 7, 6, 7, 3, 7, 5, 0, 6, 1, 2, 3, 8, 4, 1, 4, 0, 7, 3, 8, 4, 5, 8, 7, 6, 2, 0, 6, 2, 7, 5, 1, 6, 4, 0, 8, 2, 7, 4, 5, 1, 0, 5, 6, 2, 1, 7, 1, 2, 1, 5, 8, 2, 6, 4, 7, 3, 5, 7, 8, 3, 8, 3, 4, 3, 6, 5, 3, 2, 6, 0, 6, 0, 2, 1, 6, 1, 7, 6]
 
 
 if testMode == "y":
@@ -195,17 +182,16 @@ else:
                           screen=0)
     
     
-    #----------------STIMULI START --------------------------------------------
+    # ----------------STIMULI START -------------------------------------------
     
     fixationStim = visual.PatchStim(win=myWin,
                                     size=0.2,
                                     pos=[0,0],
                                     sf=0,
                                     color=(-1,-1,-1))#black
-    #----------------STIMULI END --------------------------------------------
+    # ----------------STIMULI END ---------------------------------------------    
     
-    
-    #Show introduction -----------------------------------------------------------
+    # Show introduction -------------------------------------------------------
     vmt.showText(myWin,introductionText,fontFace)
     
     
@@ -214,7 +200,7 @@ else:
     core.wait(intervalBetweenTrials)
     myWin.flip(clearBuffer=True)
     
-    #-------------VMT1 start--------------------------------------------------------
+    # -------------VMT1 start--------------------------------------------------
     vmtRate = vmtRate1
     
     if vmtRate == 1:
@@ -236,19 +222,16 @@ else:
                           subjComment,
                           outputFilenameAppend1)
     
-    #----------------VMT1 end -------------------------------------------
-    # pause
+    # ----------------VMT1 end -------------------------------------------
     core.wait(intervalBetweenTrials)
     vmt.showText(myWin,pauseText,fontFace)
-    #core.wait(intervalBetweenTrials)
-    #myWin.flip(clearBuffer=True)
     
     fixationStim.draw()
     myWin.flip()
     core.wait(intervalBetweenTrials)
     myWin.flip(clearBuffer=True)
     
-    #-------------VMT2 start--------------------------------------------------------
+    # -------------VMT2 start--------------------------------------------------
     vmtRate = vmtRate2
     
     if vmtRate == 1:
@@ -269,12 +252,10 @@ else:
                           vmt2OutputSum['correctRejections'],
                           subjComment,
                           outputFilenameAppend2)
-    #----------------VMT2 end -------------------------------------------
+    # ----------------VMT2 end -------------------------------------------
     
     
-    # -------------------- show end text ----------------------------------------
+    # -------------------- show end text --------------------------------------
     core.wait(intervalBetweenTrials)
-    #Show endText
     vmt.showText(myWin,endText,fontFace)
-    psychopy.tools.plottools.plotFrameIntervals(intervals)
     core.quit()

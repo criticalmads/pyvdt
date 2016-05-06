@@ -26,14 +26,10 @@ version 3, modified versions of this software must preserve the
 original copyright notices within the source code files.
 """
 
-#TODO: save name, date, vmtRate, vmtDuration inside the output file or append the variables to the filename (remove illegal chars)
-
 import csv
 import detectiontheory as dt
 import os
 
-
-#TODO: check if file exists
 def vmtRawScoreOutput(vmtOutput,outputFilename):
     outputCsv = csv.writer(open(outputFilename,'ab'),dialect='excel')
     outputCsv.writerow(['TrialNumber',
@@ -76,9 +72,7 @@ def vmtRawScoreOutput(vmtOutput,outputFilename):
                                  vmtOutput[i][14],
                                  vmtOutput[i][15],
                                  RT]
-        #outputCsv.writerow(vmtOutput[i,])
         outputCsv.writerow(outputCsvCurrentRow)
-    #close(outputFilename) #yields "NameError: name 'close' is not defined" TODO: fix
 
 def vmtScoreAppend(subjNumber,subjName,vmtDate,hits,misses,falseAlarms,correctRejections,subjComment,outputFilenameAppend):
     fileExists = os.path.exists(outputFilenameAppend)
@@ -92,7 +86,8 @@ def vmtScoreAppend(subjNumber,subjName,vmtDate,hits,misses,falseAlarms,correctRe
     Fadj=dt.Frate(hits,misses,adjustment=True)
     dprimeAdj=dt.dprime(hits,misses,falseAlarms,correctRejections,adjustment=True)
     
-    if fileExists == False: # then write header; otherwise just append the data
+    if fileExists == False:
+        # then write header; otherwise, simply append the data.
         outputCsv.writerow(['ID',
                             'Name',
                             'Date',

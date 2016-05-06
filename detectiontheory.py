@@ -34,7 +34,8 @@ import math
 # See Macmillan & Creelman "Detection Theory: A User's Guide", 2nd edition,
 # pp. 8-9.
 #
-# d' = 4.65 is considered an effective maximum (Macmillan & Creelman, 2008, p. 8)
+# d' = 4.65 is considered an effective maximum (Macmillan & Creelman, 2008,
+# p. 8)
 
 def Hrate(hits, misses, adjustment=False):
     """Calculates and returns H (hit rate)
@@ -45,7 +46,8 @@ def Hrate(hits, misses, adjustment=False):
     >>> Hrate(0,0)
     -1
     """
-    if hits==0 and misses==0 and adjustment==False: return -1 #division; TODO: fix
+    # Division by zero
+    if hits==0 and misses==0 and adjustment==False: return -1
     
     if adjustment==True:
         hits=hits+0.5
@@ -55,9 +57,6 @@ def Hrate(hits, misses, adjustment=False):
         H = float(hits)/(hits+misses)
     else:
         H = (hits - 0.5)/(hits+misses)
-    
-    #TODO: add other adjustments (Macmillan & Creelman; Corwin, 1994) 
-    #if adjustment==1 and H=1:
     
     return H
 
@@ -70,7 +69,8 @@ def Frate(falseAlarms, correctRejections, adjustment=False):
     >>> Frate(0,0)
     -1
     """
-    if falseAlarms==0 and correctRejections==0 and adjustment==False: return -1 #division by zero; TODO: fix
+    # Division by zero
+    if falseAlarms==0 and correctRejections==0 and adjustment==False: return -1
 
     if adjustment==True:
         falseAlarms=falseAlarms+0.5
@@ -80,9 +80,6 @@ def Frate(falseAlarms, correctRejections, adjustment=False):
         F = float(falseAlarms)/(falseAlarms+correctRejections)
     else:
         F = 0.5/(falseAlarms+correctRejections)
-
-    #TODO: add other adjustments (Macmillan & Creelman; Corwin, 1994) 
-    #if adjustment==1:
 
     return F
 
@@ -95,8 +92,10 @@ def normsinv(p):
     >>> normsinv(0)
     
     """
-    # Adapted from LGPL-licensed Visual Basic code written by Christian d'Heureuse.
-    # Original code available at: http://www.source-code.biz/snippets/vbasic/9.htm
+    # Adapted from LGPL-licensed Visual Basic code
+    # written by Christian d'Heureuse.
+    # Original code available at:
+    # http://www.source-code.biz/snippets/vbasic/9.htm
     a1 = -39.6968302866538
     a2 = 220.946098424521
     a3 = -275.928510446969
@@ -121,7 +120,7 @@ def normsinv(p):
     p_low = 0.02425
     p_high = 1 - p_low
     if p <= 0 or p >= 1:
-        return None #TODO: throw error
+        return None
     elif p < p_low:
         q = math.sqrt(-2 * math.log(p))
         z = (((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) / \
