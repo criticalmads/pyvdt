@@ -36,11 +36,11 @@ import psychopy.logging
 import csv
 
 def vmtTargets(vmtDigits):
-    """Identifies even-odd-even sequences (targets) in a list of digits
-    """
-    #  List of targets (1) and non-targets (0);
-    # no target sequence is possible before three digits have been shown,
-    # so two 0's are added at the beginning.
+    """Identify even-odd-even sequences (i.e., targets) in a list of digits.
+	'1' designates a target; '0' designates a non-target.
+	"""
+    # No target sequence is possible before three digits have been shown,
+    # so two 0's are added to the beginning of the list.
     oddEvenOdd = [0,0]
     for id,thisDigit in enumerate(vmtDigits):
         # Start at third digit (ie. first possible three-digit sequence)        
@@ -56,12 +56,14 @@ def vmtTargets(vmtDigits):
     return oddEvenOdd
 
 def calculateDigitPresentationRate(vmtRate,monitorRefreshRate):
+	"""Calculate the digit presentation rate based on the monitor's refresh rate."""
     vmtRateMs = vmtRate*1000
     msPerFrame = round(float(1000)/monitorRefreshRate,1) #using float() on the numerator forces Python to return a float instead of an integer
     digitFrames = int(math.floor(float(vmtRateMs)/msPerFrame))
     return(digitFrames)
 
 def vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontHeight,vmtFrameLogfile):
+	"""Present digits on screen and record keypresses."""
     digitStim0 = visual.TextStim(myWin,text="0",color='black',
                                 font=fontFace,height=fontHeight)
                   
@@ -230,7 +232,7 @@ def vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontH
 # ----self-test start---
 
 def selftest(listOfDigits,vmtDuration,vmtRate):
-    
+    """Generate random output data (i.e., simulate participant responses)."""
     signal = vmtTargets(listOfDigits)
     
     vmtOutput = [[0 for x in range(17)] for x in range(vmtDuration/vmtRate)] 
@@ -307,6 +309,7 @@ def selftest(listOfDigits,vmtDuration,vmtRate):
 
 
 def showText(myWin,textToShow,fontFace):
+	"""Display text on screen (e.g., instructions for participants)."""
     try: textClock
     except NameError:
         textClock=core.Clock()
@@ -337,7 +340,7 @@ def showText(myWin,textToShow,fontFace):
         myWin.flip()
 
 def VMTdigitSequences(filename):
-    """Returns a nested list containing VMT digit sequences"""
+    """Return a nested list containing digit sequences."""
     csvReader = csv.reader(open(filename, 'rb'), delimiter=',', quotechar='"')
     nestedListOfTargets = []
     for row in csvReader:

@@ -31,7 +31,11 @@ import detectiontheory as dt
 import os
 
 def vmtRawScoreOutput(vmtOutput,outputFilename):
-    outputCsv = csv.writer(open(outputFilename,'ab'),dialect='excel')
+    """Write raw, unprocessed data relating to the presentation of stimuli and the calculation of sensitivity measures to .csv files.
+	These data are provided primarily for diagnostic purposes.
+	By default, these output .csv files end in "<timestamp>-{1,2}.csv".
+	"""
+	outputCsv = csv.writer(open(outputFilename,'ab'),dialect='excel')
     outputCsv.writerow(['TrialNumber',
                         'Hit',
                         'Miss',
@@ -75,7 +79,11 @@ def vmtRawScoreOutput(vmtOutput,outputFilename):
         outputCsv.writerow(outputCsvCurrentRow)
 
 def vmtScoreAppend(subjNumber,subjName,vmtDate,hits,misses,falseAlarms,correctRejections,subjComment,outputFilenameAppend):
-    fileExists = os.path.exists(outputFilenameAppend)
+    """Write sensitivity measures (e.g., d prime), participant names and IDs, experiment dates, and comments to .csv files.
+	These are the main output variables of interest to the user (i.e., the experimenter).
+	By default, these output .csv files end in "data-{1,2}.csv".
+	"""
+	fileExists = os.path.exists(outputFilenameAppend)
     outputCsv = csv.writer(open(outputFilenameAppend,'ab'),dialect='excel')
 
     H=dt.Hrate(hits,misses)
