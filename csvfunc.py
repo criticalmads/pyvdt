@@ -63,8 +63,8 @@ def vmtRawScoreOutput(vmtOutput, outputFilename):
 
                         # Here, "blink" refers to the single blank
                         # frames shown between digit presentations.
-                        # The intention behind these is to allow
-                        # participants to notice the change when
+                        # The intention behind these is to help
+                        # participants notice the change when
                         # identical digits are presented back-to-back.
                         # See also: functions.py
                         'BlinkStart',  # Time at start of blank frame

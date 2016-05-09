@@ -188,7 +188,7 @@ def vmt(myWin,
 
         myWin.clearBuffer()
         # Shows one blank frame between digits;
-        # lets participants notice when there are two
+        # helps participants notice when there are two
         # identical digits in a row
         myWin.flip()
         currentBlinkEndTimestamp = trialClock.getTime()
