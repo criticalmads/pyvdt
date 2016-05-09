@@ -28,7 +28,8 @@ original copyright notices within the source code files.
 
 import math
 
-def Hrate(hits, misses, adjustment = False):
+
+def Hrate(hits, misses, adjustment=False):
     """Calculates and returns H (hit rate).
     >>> Hrate(20, 5)
     0.8
@@ -38,9 +39,10 @@ def Hrate(hits, misses, adjustment = False):
     -1
     """
     # Division by zero
-    if hits == 0 and misses == 0 and adjustment == False: return -1
-    
-    if adjustment==True:
+    if hits == 0 and misses == 0 and adjustment == False:
+        return -1
+
+    if adjustment == True:
         # The adjustment avoids infinite d' values by adding 0.5 to
         # all data cells (hits, misses, false alarms, correct
         # rejections) regardless of whether zeroes are present.
@@ -49,15 +51,16 @@ def Hrate(hits, misses, adjustment = False):
         # Creelman, 2004, p. 8)
         hits = hits + 0.5
         misses = misses + 0.5
-        
+
     if misses > 0:
         H = float(hits) / (hits + misses)
     else:
         H = (hits - 0.5) / (hits + misses)
-    
+
     return H
 
-def Frate(falseAlarms, correctRejections, adjustment = False):
+
+def Frate(falseAlarms, correctRejections, adjustment=False):
     """Calculates and returns F (false-alarm rate).
     >>> Frate(10, 15)
     0.4
@@ -76,24 +79,26 @@ def Frate(falseAlarms, correctRejections, adjustment = False):
 
     if falseAlarms > 0:
         F = (float(falseAlarms) /
-            (falseAlarms + correctRejections))
+             (falseAlarms + correctRejections))
     else:
-        F = (0.5 / 
-            (falseAlarms + correctRejections))
+        F = (0.5 /
+             (falseAlarms + correctRejections))
 
     return F
 
+
 def normsinv(p):
     """Returns the quantile function.
-    
-    This function is also known as the percent point function and
-    the inverse cumulative distribution function.
+
+    This (mathematical) function is also known as
+    "the percent point function" and
+    the "inverse cumulative distribution function."
     >>> round(normsinv(0.1),7)
     -1.2815516
     >>> round(normsinv(0.15),7)
     -1.0364334
     >>> normsinv(0)
-    
+
     """
     # Adapted from LGPL-licensed Visual Basic code
     # written by Christian d'Heureuse.
@@ -127,7 +132,7 @@ def normsinv(p):
     elif p < p_low:
         q = math.sqrt(-2 * math.log(p))
         z = (((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) / \
-             ((((d1 * q + d2) * q + d3) * q + d4) * q + 1)
+            ((((d1 * q + d2) * q + d3) * q + d4) * q + 1)
     elif p <= p_high:
         q = p - 0.5
         r = q * q
@@ -136,14 +141,15 @@ def normsinv(p):
     else:
         q = math.sqrt(-2 * math.log(1 - p))
         z = -(((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) / \
-              ((((d1 * q + d2) * q + d3) * q + d4) * q + 1)
+            ((((d1 * q + d2) * q + d3) * q + d4) * q + 1)
     return z
+
 
 def dprime(hits,
            misses,
            falseAlarms,
            correctRejections,
-           adjustment = False):
+           adjustment=False):
     """Calculates and returns d'
     >>> dprime(20, 5, 10, 15)
     1.09496834
@@ -154,10 +160,10 @@ def dprime(hits,
     >>> dprime(25, 0, 10, 15, True)
     2.31330601
     """
-    if (hits == 0 and 
-        misses == 0 and 
-        correctRejections == 0 and 
-        falseAlarms == 0): 
+    if (hits == 0 and
+        misses == 0 and
+        correctRejections == 0 and
+            falseAlarms == 0):
             adjustment = True
     H = Hrate(hits, misses, adjustment)
     F = Frate(falseAlarms, correctRejections, adjustment)
@@ -167,7 +173,7 @@ def dprime(hits,
         return -1
     dprime = zH - zF
     return round(dprime, 8)
-    
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

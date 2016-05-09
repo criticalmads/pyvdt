@@ -30,65 +30,67 @@ import csv
 import detectiontheory as dt
 import os
 
-def vmtRawScoreOutput(vmtOutput,outputFilename):
+
+def vmtRawScoreOutput(vmtOutput, outputFilename):
     """Write raw, unprocessed data to .csv files.
-    
+
     These raw data relate to the presentation of stimuli and
     the calculation of sensitivity measures to .csv files.
     These data are provided primarily for diagnostic purposes.
     By default, the output .csv files are given filenames ending in
     "<timestamp>-{1,2}.csv".
     """
-    outputCsv = csv.writer(open(outputFilename,'ab'),dialect='excel')
+    outputCsv = csv.writer(open(outputFilename, 'ab'), dialect='excel')
     outputCsv.writerow(['TrialNumber',  # Stimulus serial number
-    
+
                         'Hit',              # Target detected?
                         'Miss',             # Target missed?
                         'FalseAlarm',       # ...and so on.
                         'CorrectRejection',
-                        
+
                         'ShownDigit',       # The digit shown on screen
-                        
+
                         'Signal',           # Signal present?
                         'Decision',         # Participant's decision
-                        
+
                         'TrialDuration',   # Digit shown for x millisecs
-                        
+
                         'DigitStart',  # Time at start of presentation
                         'DigitEnd',    # Time at end
                         'DigitDuration',  # Digit presentation duration
-                        
+
                         'DecisionTimestamp',  # Time at keypress
-                        
+
                         'BlinkStart',         #
                         'BlinkEnd',           #
                         'BlinkDuration',      #
-                        
+
                         'RT'])  # Reaction time
-    
+
     for i, obj in enumerate(vmtOutput):
         if vmtOutput[i][16] == -1:
             RT = ""
         else:
             RT = vmtOutput[i][16]
-        outputCsvCurrentRow =   [int(vmtOutput[i][0]),
-                                 int(vmtOutput[i][1]),
-                                 int(vmtOutput[i][2]),
-                                 int(vmtOutput[i][3]),
-                                 int(vmtOutput[i][4]),
-                                 int(vmtOutput[i][5]),
-                                 int(vmtOutput[i][6]),
-                                 int(vmtOutput[i][7]),
-                                 vmtOutput[i][8],
-                                 vmtOutput[i][9],
-                                 vmtOutput[i][10],
-                                 vmtOutput[i][11],
-                                 vmtOutput[i][12],
-                                 vmtOutput[i][13],
-                                 vmtOutput[i][14],
-                                 vmtOutput[i][15],
-                                 RT]
+        outputCsvCurrentRow = [int(vmtOutput[i][0]),
+                               int(vmtOutput[i][1]),
+                               int(vmtOutput[i][2]),
+                               int(vmtOutput[i][3]),
+                               int(vmtOutput[i][4]),
+                               int(vmtOutput[i][5]),
+                               int(vmtOutput[i][6]),
+                               int(vmtOutput[i][7]),
+                               vmtOutput[i][8],
+                               vmtOutput[i][9],
+                               vmtOutput[i][10],
+                               vmtOutput[i][11],
+                               vmtOutput[i][12],
+                               vmtOutput[i][13],
+                               vmtOutput[i][14],
+                               vmtOutput[i][15],
+                               RT]
         outputCsv.writerow(outputCsvCurrentRow)
+
 
 def vmtScoreAppend(subjNumber,
                    subjName,
@@ -100,50 +102,50 @@ def vmtScoreAppend(subjNumber,
                    subjComment,
                    outputFilenameAppend):
     """Write main output variables of interest to .csv files.
-    
+
     These variables include sensitivity measures (e.g., d'),
     participant names and IDs, experiment dates, and comments.
     By default, these output .csv files are given filenames ending in
     "data-{1,2}.csv".
     """
     fileExists = os.path.exists(outputFilenameAppend)
-    outputCsv = csv.writer(open(outputFilenameAppend,'ab'),
+    outputCsv = csv.writer(open(outputFilenameAppend, 'ab'),
                            dialect='excel')
 
     H = dt.Hrate(hits, misses)
     F = dt.Frate(hits, misses)
     dprime = dt.dprime(hits, misses, falseAlarms, correctRejections)
 
-    Hadj = dt.Hrate(hits, misses, adjustment = True)
-    Fadj = dt.Frate(hits, misses, adjustment = True)
+    Hadj = dt.Hrate(hits, misses, adjustment=True)
+    Fadj = dt.Frate(hits, misses, adjustment=True)
     dprimeAdj = dt.dprime(hits,
-                        misses,
-                        falseAlarms,
-                        correctRejections,
-                        adjustment=True)
-    
+                          misses,
+                          falseAlarms,
+                          correctRejections,
+                          adjustment=True)
+
     if fileExists == False:
         # ...then write header; otherwise, simply append the data.
         # In the following, "M & C" refers to Macmillan & Creelman.
         outputCsv.writerow(['ID',                   # Subject number
                             'Name',
                             'Date',
-                            
+
                             'Hits',                 # Sum of hits
                             'Misses',               # Sum of misses
                             'False alarms',         # ...and so on.
                             'Correct rejections',
-                            
+
                             'H',      # Hit rate (M & C, 2004, p. 5)
                             'F',      # False-alarm rate (M & C, p. 5)
                             'd\'',    # d prime (M & C, p. 8)
-                            
+
                             'H adjusted',    # Adjusted hit rate
                             'F adjusted',    # Adjusted false-alarm rate
                             'd\' adjusted',  # Adjusted d'
-                            
+
                             'Comment'])
-    
+
     outputCsv.writerow([subjNumber,
                         subjName,
                         vmtDate,
@@ -158,4 +160,3 @@ def vmtScoreAppend(subjNumber,
                         Fadj,
                         dprimeAdj,
                         subjComment])
-

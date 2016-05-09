@@ -35,41 +35,46 @@ from psychopy import core, event
 import psychopy.logging
 import csv
 
+
 def vmtTargets(vmtDigits):
     """Identify target sequences in a list of digits.
-    
+
     Targets are defined as even-odd-even sequences.
     '1' designates a target; '0' designates a non-target.
-	"""
+        """
     # No target sequence is possible before three digits
     # have been shown, so two 0's are added to the
     # beginning of the list.
-    oddEvenOdd = [0,0]
-    for id,thisDigit in enumerate(vmtDigits):
+    oddEvenOdd = [0, 0]
+    for id, thisDigit in enumerate(vmtDigits):
         # Start at third digit
-        # (i.e., first possible three-digit sequence). 
+        # (i.e., first possible three-digit sequence).
         if id > 1:
             firstDigit = int(vmtDigits[id - 2])
             secondDigit = int(vmtDigits[id - 1])
             thisDigit = int(thisDigit)
 
-            if firstDigit%2 == 0 and secondDigit%2 != 0 and thisDigit%2 == 0:
+            if (firstDigit % 2 == 0 and 
+            secondDigit % 2 != 0 and 
+            thisDigit % 2 == 0):
                 oddEvenOdd.append(1)
             else:
                 oddEvenOdd.append(0)
     return oddEvenOdd
 
+
 def calculateDigitPresentationRate(vmtRate, monitorRefreshRate):
     """Calculate the digit presentation rate.
-    
+
     This rate is based on the monitor's refresh rate."""
-    vmtRateMs = vmtRate*1000
+    vmtRateMs = vmtRate * 1000
      # Force Python to return a float; see PEP 238.
     msPerFrame = round(float(1000)
-                             / monitorRefreshRate, 1)
-    digitFrames = int(math.floor(float(vmtRateMs) 
-                                       / msPerFrame))
+                       / monitorRefreshRate, 1)
+    digitFrames = int(math.floor(float(vmtRateMs)
+                                 / msPerFrame))
     return(digitFrames)
+
 
 def vmt(myWin,
         vmtRate,
@@ -80,36 +85,36 @@ def vmt(myWin,
         fontHeight,
         vmtFrameLogfile):
     """Present digits on screen and record keypresses."""
-    digitStim0 = visual.TextStim(myWin,text="0",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim1 = visual.TextStim(myWin,text="1",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim2 = visual.TextStim(myWin,text="2",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim3 = visual.TextStim(myWin,text="3",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim4 = visual.TextStim(myWin,text="4",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim5 = visual.TextStim(myWin,text="5",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim6 = visual.TextStim(myWin,text="6",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim7 = visual.TextStim(myWin,text="7",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim8 = visual.TextStim(myWin,text="8",color='black',
-                                font=fontFace,height=fontHeight)
-                  
-    digitStim9 = visual.TextStim(myWin,text="9",color='black',
-                                font=fontFace,height=fontHeight)
-                                
+    digitStim0 = visual.TextStim(myWin, text="0", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim1 = visual.TextStim(myWin, text="1", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim2 = visual.TextStim(myWin, text="2", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim3 = visual.TextStim(myWin, text="3", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim4 = visual.TextStim(myWin, text="4", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim5 = visual.TextStim(myWin, text="5", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim6 = visual.TextStim(myWin, text="6", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim7 = visual.TextStim(myWin, text="7", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim8 = visual.TextStim(myWin, text="8", color='black',
+                                 font=fontFace, height=fontHeight)
+
+    digitStim9 = visual.TextStim(myWin, text="9", color='black',
+                                 font=fontFace, height=fontHeight)
+
     digitStims = {0: digitStim0,
                   1: digitStim1,
                   2: digitStim2,
@@ -122,50 +127,50 @@ def vmt(myWin,
                   9: digitStim9}
 
     signal = vmtTargets(listOfDigits)
-    
-    vmtOutput = [[0 for x in range(17)] for x in range(vmtDuration/vmtRate)] 
+
+    vmtOutput = [[0 for x in range(17)] for x in range(vmtDuration / vmtRate)]
     vmtOutputSum = {'hits': 0,
                     'misses': 0,
                     'falseAlarms': 0,
                     'correctRejections': 0}
 
-    try: trialClock
+    try:
+        trialClock
     except NameError:
-        trialClock=core.Clock()
+        trialClock = core.Clock()
     else:
         trialClock.reset()
     event.clearEvents(eventType='keyboard')
-    
+
     # Make log timestamps start at the beginning of the test
     # instead of at the beginning of the program.
     psychopy.logging.setDefaultClock(trialClock)
     myWin.setRecordFrameIntervals()
-    
+
     digitFrames = calculateDigitPresentationRate(vmtRate,
                                                  monitorRefreshRate)
-    
+
     digitCounter = 0
     currentDigit = 0
-    
+
     while digitCounter < (vmtDuration / vmtRate):
         currentDigit = listOfDigits[digitCounter]
         currentDigitStim = digitStims.get(int(currentDigit))
-    
+
         for frameN in range(digitFrames):
             if frameN == 0:
                 currentDigitStim.draw()
                 myWin.flip(clearBuffer=False)
-                currentDigitStartTimestamp=trialClock.getTime()
+                currentDigitStartTimestamp = trialClock.getTime()
             else:
                 currentDigitStim.draw()
                 myWin.flip()
-        
 
         currentDigitEndTimestamp = trialClock.getTime()
         currentBlinkStartTimestamp = trialClock.getTime()
-        
-        # Get list of timestamped space keypresses        
-        trialKeys = event.getKeys(["space"],timeStamped = trialClock)
+
+        # Get list of timestamped space keypresses
+        trialKeys = event.getKeys(["space"], timeStamped=trialClock)
         if len(trialKeys) > 0:
             # Get first tuple ('space', <timestamp>) in list of
             # tuples of space keypresses and timestamps;
@@ -175,19 +180,19 @@ def vmt(myWin,
         else:
             currentDigitSpaceTimestamp = 0
             currentDigitDecision = 0
-        
+
         # To abort testing, press q
         quitKeys = event.getKeys(["q"])
-        if len(quitKeys) > 0: core.quit()
-    
+        if len(quitKeys) > 0:
+            core.quit()
+
         myWin.clearBuffer()
         # Shows one blank frame between digits;
         # lets participants notice when there are two
-        # identical digits in a row        
+        # identical digits in a row
         myWin.flip()
         currentBlinkEndTimestamp = trialClock.getTime()
-        
-        
+
         if signal[digitCounter] == 1 and currentDigitDecision == 1:
             hit = 1
             miss = 0
@@ -208,13 +213,12 @@ def vmt(myWin,
             miss = 0
             falseAlarm = 0
             correctRejection = 1
-    
+
         vmtOutputSum['hits'] += hit
         vmtOutputSum['misses'] += miss
         vmtOutputSum['falseAlarms'] += falseAlarm
         vmtOutputSum['correctRejections'] += correctRejection
-    
-        
+
         # TrialNumber Hit Miss FalseAlarm
         # CorrectRejection ShownDigit Signal Decision
         # TrialDuration DigitStart DigitEnd DigitDuration
@@ -227,62 +231,61 @@ def vmt(myWin,
         vmtOutput[digitCounter][5] = currentDigit
         vmtOutput[digitCounter][6] = signal[digitCounter]
         vmtOutput[digitCounter][7] = currentDigitDecision
-        
-        vmtOutput[digitCounter][8] = (currentBlinkEndTimestamp 
+
+        vmtOutput[digitCounter][8] = (currentBlinkEndTimestamp
                                       - currentDigitStartTimestamp)
-                                      
+
         vmtOutput[digitCounter][9] = currentDigitStartTimestamp
         vmtOutput[digitCounter][10] = currentDigitEndTimestamp
-        
+
         vmtOutput[digitCounter][11] = (currentDigitEndTimestamp
                                        - currentDigitStartTimestamp)
-                                       
+
         vmtOutput[digitCounter][12] = currentDigitSpaceTimestamp
         vmtOutput[digitCounter][13] = currentBlinkStartTimestamp
         vmtOutput[digitCounter][14] = currentBlinkEndTimestamp
-        
+
         vmtOutput[digitCounter][15] = (currentBlinkEndTimestamp
                                        - currentBlinkStartTimestamp)
-        if currentDigitDecision==1:
+        if currentDigitDecision == 1:
             vmtOutput[digitCounter][16] = (currentDigitSpaceTimestamp
                                            - currentDigitStartTimestamp)
         else:
             # Space wasn't pressed; -1 is removed from the output file.
             vmtOutput[digitCounter][16] = -1
         digitCounter += 1
-    
+
     myWin.saveFrameIntervals(vmtFrameLogfile)
-    
+
     myWin.flip(clearBuffer=True)
     myWin.setRecordFrameIntervals(False)
-    
+
     return vmtOutput, vmtOutputSum
 
 # ----self-test start---
 
-def selftest(listOfDigits,vmtDuration,vmtRate):
+
+def selftest(listOfDigits, vmtDuration, vmtRate):
     """Generate random output data.
-    
+
     This function simulates participant responses."""
     signal = vmtTargets(listOfDigits)
-    
+
     vmtOutput = [[0 for x in range(17)] for x in range(vmtDuration / vmtRate)]
     vmtOutputSum = {'hits': 0,
                     'misses': 0,
                     'falseAlarms': 0,
                     'correctRejections': 0}
 
-    
     digitCounter = 0
     currentDigit = 0
-    
+
     while digitCounter < (vmtDuration / vmtRate):
-    
+
         currentDigit = listOfDigits[digitCounter]
-    
-        currentDigitDecision = random.randint(0,1)
-        
-        
+
+        currentDigitDecision = random.randint(0, 1)
+
         if signal[digitCounter] == 1 and currentDigitDecision == 1:
             hit = 1
             miss = 0
@@ -303,13 +306,12 @@ def selftest(listOfDigits,vmtDuration,vmtRate):
             miss = 0
             falseAlarm = 0
             correctRejection = 1
-    
+
         vmtOutputSum['hits'] += hit
         vmtOutputSum['misses'] += miss
         vmtOutputSum['falseAlarms'] += falseAlarm
         vmtOutputSum['correctRejections'] += correctRejection
-    
-        
+
         # TrialNumber Hit Miss FalseAlarm
         # CorrectRejection ShownDigit Signal Decision
         # TrialDuration DigitStart DigitEnd DigitDuration
@@ -332,30 +334,31 @@ def selftest(listOfDigits,vmtDuration,vmtRate):
         vmtOutput[digitCounter][15] = 0
         vmtOutput[digitCounter][16] = 0
         digitCounter += 1
-    
+
     return vmtOutput, vmtOutputSum
 
 
 # ----self-test end-----
 
 
-def showText(myWin,textToShow,fontFace):
+def showText(myWin, textToShow, fontFace):
     """Display text on screen (e.g., instructions for participants)."""
-    try: textClock
+    try:
+        textClock
     except NameError:
-        textClock=core.Clock()
+        textClock = core.Clock()
     else:
         textClock.reset()
     textStim = visual.TextStim(myWin,
-                               text = textToShow,
-                               color = 'black',
-                               font = fontFace,
-                               height = 1)
-    continueInstruct=True
+                               text=textToShow,
+                               color='black',
+                               font=fontFace,
+                               height=1)
+    continueInstruct = True
     while continueInstruct:
         # Get current time
-        t=textClock.getTime()
-        
+        t = textClock.getTime()
+
         # Update/draw components on each frame
         if (0 <= t):
             textStim.draw()
@@ -366,9 +369,11 @@ def showText(myWin,textToShow,fontFace):
                 # Abort routine on response
                 continueInstruct = False
                 # Check for quit (the [Esc] key).
-                if keypresses[0] == "escape": core.quit()
+                if keypresses[0] == "escape":
+                    core.quit()
         # Refresh the screen
         myWin.flip()
+
 
 def VMTdigitSequences(filename):
     """Return a nested list containing digit sequences."""
