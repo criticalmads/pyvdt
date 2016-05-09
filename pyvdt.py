@@ -41,51 +41,82 @@ import csvfunc as vmtcsv
 config = ConfigParser()
 config.read('pyvdt.ini')
 
-language = config.get('misc','language')
+language = config.get('misc', 'language')
 
-resolutionX = int(config.get('monitor','resolutionX'))
-resolutionY = int(config.get('monitor','resolutionY'))
-optFullscreen = int(config.get('monitor','fullscreen'))
+resolutionX = int(config.get('monitor', 'resolutionX'))
+resolutionY = int(config.get('monitor', 'resolutionY'))
+optFullscreen = int(config.get('monitor', 'fullscreen'))
 
 # Monitor refresh rate in Hz.
 # This is used to calculate how many frames to present stimuli for.
-monitorRefreshRate = int(config.get('monitor','refreshRateHz'))
+monitorRefreshRate = int(config.get('monitor', 'refreshRateHz'))
 
 # Digit presentation rate in seconds.
 # Actual rate depends on monitor refresh rate.
-vmtRate1 = int(config.get('detectiontask','rate1'))
-vmtRate2 = int(config.get('detectiontask','rate2'))
+vmtRate1 = int(config.get('detectiontask', 'rate1'))
+vmtRate2 = int(config.get('detectiontask', 'rate2'))
 # vmtDuration is used to calculate how many digits to present.
-# Default duration is 2 minutes and 32 seconds (see Knutson et al., 1991).
-vmtDuration = int(config.get('detectiontask','duration'))
+# Default duration is 2 minutes and 32 seconds
+# (see Knutson et al., 1991).
+vmtDuration = int(config.get('detectiontask', 'duration'))
 
-outputFilePrefix = config.get('misc','outputPrefix')
+outputFilePrefix = config.get('misc', 'outputPrefix')
 
 fontHeight = 16
-fontFace = ['Liberation Serif','Times New Roman','Verdana','Arial'] #use the first font found
+# Use the first font found
+fontFace = ['Liberation Serif', 'Times New Roman', 'Verdana', 'Arial']
 intervalBetweenTrials=2
 # ----------------- CONFIG END-----------------
 
 # ------------------ additional config start -------------------
-optionsDialog = gui.Dlg(title="PyVDT",size=(400,400))
+optionsDialog = gui.Dlg(title = "PyVDT", 
+                        size = (400, 400))
 optionsDialog.addText('Subject info')
 optionsDialog.addField('Name:')
 optionsDialog.addField('Subject number:')
 
 optionsDialog.addText('Experiment Info')
-optionsDialog.addField('Presentation rate (1st test):',vmtRate1,tip='The number of seconds for which to display digits during the first test')
-optionsDialog.addField('Digit sequence (1st test):',1,tip='The line number from pyvdtSequences-rate1.csv to use as the digit sequence for the first test')
-optionsDialog.addField('Presentation rate (2nd test):',vmtRate2,tip='The number of seconds for which to display digits during the second test')
-optionsDialog.addField('Digit sequence (2nd test):',1,tip='The line number from pyvdtSequences-rate2.csv to use as the digit sequence for the second test')
 
-optionsDialog.addField('Monitor refresh rate in Hz',monitorRefreshRate)
+optionsDialog.addField('Presentation rate (1st test):', 
+                       vmtRate1,
+                       tip = 'The number of seconds for which to \
+                       display digits during the first test')
+                       
+optionsDialog.addField('Digit sequence (1st test):',
+                       1,
+                       tip = 'The line number from \
+                       pyvdtSequences-rate1.csv to use as the \
+                       digit sequence for the first test')
+                       
+optionsDialog.addField('Presentation rate (2nd test):',
+                       vmtRate2,
+                       tip = 'The number of seconds for which to \
+                       display digits during the second test')
+                       
+optionsDialog.addField('Digit sequence (2nd test):',
+                       1,
+                       tip = 'The line number from \
+                       pyvdtSequences-rate2.csv to use as the \
+                       digit sequence for the second test')
+
+optionsDialog.addField('Monitor refresh rate in Hz',
+                       monitorRefreshRate)
 optionsDialog.addField('Comment:')
-optionsDialog.addField('Output file prefix:',outputFilePrefix,tip='Prefix to add to output files')
-optionsDialog.addField('Language:', language,tip='Valid entries are en (English) and da (Danish)')
+optionsDialog.addField('Output file prefix:', 
+                       outputFilePrefix,
+                       tip='Prefix to add to output files')
+optionsDialog.addField('Language:', 
+                       language,
+                       tip='Valid entries are en (English) and \
+                       da (Danish)')
 
-optionsDialog.addField('Self-test mode',"n",tip='Set to "y" to generate output data; "p" to plot frame log file')
-optionsDialog.addField('No. of iterations',"5",tip='The number of random subjects to generate')
-optionsDialog.addField('Frame log file to plot',"pyvdt-test-frames.log")
+optionsDialog.addField('Self-test mode',"n",
+                       tip='Set to "y" to generate output data; \
+                       "p" to plot frame log file')
+optionsDialog.addField('No. of iterations',"5",
+                       tip='The number of random subjects to \
+                       generate')
+optionsDialog.addField('Frame log file to plot', "pyvdt-test-frames.log")
 
 optionsDialog.addText('')
 optionsDialog.addText('PyVDT')
@@ -116,12 +147,12 @@ if optionsDialog.OK:
 else:
     core.quit()
 
-vmtLogfile = open(outputFilePrefix+subjNumber+subjName+".log",'a')
-vmtFrameLogfile = outputFilePrefix+subjNumber+subjName+"-frames.log"
-psychopy.logging.LogFile(f=vmtLogfile,level=0)
-psychopy.logging.info("Subject name: "+subjName)
-psychopy.logging.info("Subject number: "+subjNumber)
-psychopy.logging.info("Comment: "+subjComment)
+vmtLogfile = open(outputFilePrefix + subjNumber + subjName + ".log", 'a')
+vmtFrameLogfile = outputFilePrefix + subjNumber + subjName + "-frames.log"
+psychopy.logging.LogFile(f = vmtLogfile, level = 0)
+psychopy.logging.info("Subject name: " + subjName)
+psychopy.logging.info("Subject number: " + subjNumber)
+psychopy.logging.info("Comment: " + subjComment)
 
 VMTdigitSeqs1 = vmt.VMTdigitSequences("pyvdtSequences-rate1.csv")
 listOfDigits1 = VMTdigitSeqs1[vmt1LineNumber]
@@ -129,9 +160,12 @@ listOfDigits1 = VMTdigitSeqs1[vmt1LineNumber]
 VMTdigitSeqs2 = vmt.VMTdigitSequences("pyvdtSequences-rate2.csv")
 listOfDigits2 = VMTdigitSeqs2[vmt2LineNumber]
 
-introductionText = unicode(config.get(language,'introText'),errors='replace')
-pauseText = unicode(config.get(language,'pauseText'),errors='replace')
-endText = unicode(config.get(language,'endText'),errors='replace')
+introductionText = unicode(config.get(language, 'introText'),
+                           errors = 'replace')
+pauseText = unicode(config.get(language, 'pauseText'),
+                    errors = 'replace')
+endText = unicode(config.get(language, 'endText'),
+                  errors = 'replace')
 
 vmtDate = data.getDateStr()
 
@@ -148,9 +182,11 @@ if testMode == "y":
         thisSubjName = subjName + str(i)
         outputFilePrefix = "test-" + thisSubjName + "-"
 
-        print "Generating random data for subject " + thisSubjName + "(" + str(i) + "/" + testIterations + ")..."
+        print "Generating random data for subject " + thisSubjName + \
+        "(" + str(i) + "/" + testIterations + ")..."
 
-        testOutput, testOutputSum = vmt.selftest(listOfDigits1,vmtDuration,vmtRate1)
+        testOutput, testOutputSum = vmt.selftest(listOfDigits1,
+                                                 vmtDuration,vmtRate1)
         testOutputFilename = outputFilePrefix+vmtDate+".csv"
         
         vmtcsv.vmtRawScoreOutput(testOutput,testOutputFilename)
@@ -182,16 +218,16 @@ else:
                           screen=0)
     
     
-    # ----------------STIMULI START -------------------------------------------
+    # ----------------STIMULI START ------------------------------------
     
     fixationStim = visual.PatchStim(win=myWin,
                                     size=0.2,
                                     pos=[0,0],
                                     sf=0,
-                                    color=(-1,-1,-1))#black
-    # ----------------STIMULI END ---------------------------------------------    
+                                    color=(-1,-1,-1))  # Black
+    # ----------------STIMULI END --------------------------------------    
     
-    # Show introduction -------------------------------------------------------
+    # Show introduction ------------------------------------------------
     vmt.showText(myWin,introductionText,fontFace)
     
     
@@ -200,7 +236,7 @@ else:
     core.wait(intervalBetweenTrials)
     myWin.flip(clearBuffer=True)
     
-    # -------------VMT1 start--------------------------------------------------
+    # -------------VMT1 start-------------------------------------------
     vmtRate = vmtRate1
     
     if vmtRate == 1:
@@ -209,7 +245,14 @@ else:
     if vmtRate == 2:
         listOfDigits = listOfDigits2
     
-    vmt1output, vmt1OutputSum = vmt.vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontHeight,vmtFrameLogfile)
+    vmt1output, vmt1OutputSum = vmt.vmt(myWin,
+                                        vmtRate,
+                                        vmtDuration,
+                                        monitorRefreshRate,
+                                        listOfDigits,
+                                        fontFace,
+                                        fontHeight,
+                                        vmtFrameLogfile)
     
     vmtcsv.vmtRawScoreOutput(vmt1output,outputFilename1)
     vmtcsv.vmtScoreAppend(subjNumber,
@@ -222,7 +265,7 @@ else:
                           subjComment,
                           outputFilenameAppend1)
     
-    # ----------------VMT1 end -------------------------------------------
+    # ----------------VMT1 end -----------------------------------------
     core.wait(intervalBetweenTrials)
     vmt.showText(myWin,pauseText,fontFace)
     
@@ -231,7 +274,7 @@ else:
     core.wait(intervalBetweenTrials)
     myWin.flip(clearBuffer=True)
     
-    # -------------VMT2 start--------------------------------------------------
+    # -------------VMT2 start-------------------------------------------
     vmtRate = vmtRate2
     
     if vmtRate == 1:
@@ -240,7 +283,14 @@ else:
     if vmtRate == 2:
         listOfDigits = listOfDigits2
     
-    vmt2output, vmt2OutputSum = vmt.vmt(myWin,vmtRate,vmtDuration,monitorRefreshRate,listOfDigits,fontFace,fontHeight,vmtFrameLogfile)
+    vmt2output, vmt2OutputSum = vmt.vmt(myWin,
+                                        vmtRate,
+                                        vmtDuration,
+                                        monitorRefreshRate,
+                                        listOfDigits,
+                                        fontFace,
+                                        fontHeight,
+                                        vmtFrameLogfile)
     
     vmtcsv.vmtRawScoreOutput(vmt2output,outputFilename2)
     vmtcsv.vmtScoreAppend(subjNumber,
@@ -252,10 +302,10 @@ else:
                           vmt2OutputSum['correctRejections'],
                           subjComment,
                           outputFilenameAppend2)
-    # ----------------VMT2 end -------------------------------------------
+    # ----------------VMT2 end -----------------------------------------
     
     
-    # -------------------- show end text --------------------------------------
+    # -------------------- show end text -------------------------------
     core.wait(intervalBetweenTrials)
     vmt.showText(myWin,endText,fontFace)
     core.quit()

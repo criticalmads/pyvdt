@@ -28,63 +28,66 @@ original copyright notices within the source code files.
 
 import math
 
-# The adjustment avoids infinite d' values by adding 0.5 to all data cells
-# (hits, misses, false alarms, correct rejections) regardless of whether
-# zeroes are present.
-# See Macmillan & Creelman "Detection Theory: A User's Guide", 2nd edition,
-# pp. 8-9.
-#
-# d' = 4.65 is considered an effective maximum (Macmillan & Creelman, 2008,
-# p. 8)
-
-def Hrate(hits, misses, adjustment=False):
-    """Calculates and returns H (hit rate)
-    >>> Hrate(20,5)
+def Hrate(hits, misses, adjustment = False):
+    """Calculates and returns H (hit rate).
+    >>> Hrate(20, 5)
     0.8
-    >>> Hrate(0,0,True)
+    >>> Hrate(0, 0, True)
     0.5
-    >>> Hrate(0,0)
+    >>> Hrate(0, 0)
     -1
     """
     # Division by zero
-    if hits==0 and misses==0 and adjustment==False: return -1
+    if hits == 0 and misses == 0 and adjustment == False: return -1
     
     if adjustment==True:
-        hits=hits+0.5
-        misses=misses+0.5
+        # The adjustment avoids infinite d' values by adding 0.5 to
+        # all data cells (hits, misses, false alarms, correct
+        # rejections) regardless of whether zeroes are present.
+        # See Macmillan and Creelman (2004, pp. 8-9).
+        # d' = 4.65 is considered an effective maximum (Macmillan &
+        # Creelman, 2004, p. 8)
+        hits = hits + 0.5
+        misses = misses + 0.5
         
-    if misses>0:
-        H = float(hits)/(hits+misses)
+    if misses > 0:
+        H = float(hits) / (hits + misses)
     else:
-        H = (hits - 0.5)/(hits+misses)
+        H = (hits - 0.5) / (hits + misses)
     
     return H
 
-def Frate(falseAlarms, correctRejections, adjustment=False):
-    """Calculates and returns F (false-alarm rate)
-    >>> Frate(10,15)
+def Frate(falseAlarms, correctRejections, adjustment = False):
+    """Calculates and returns F (false-alarm rate).
+    >>> Frate(10, 15)
     0.4
-    >>> Frate(0,0,True)
+    >>> Frate(0, 0, True)
     0.5
-    >>> Frate(0,0)
+    >>> Frate(0, 0)
     -1
     """
     # Division by zero
-    if falseAlarms==0 and correctRejections==0 and adjustment==False: return -1
+    if falseAlarms == 0 and correctRejections == 0 and adjustment == False:
+        return -1
 
-    if adjustment==True:
-        falseAlarms=falseAlarms+0.5
-        correctRejections=correctRejections+0.5
+    if adjustment == True:
+        falseAlarms = falseAlarms + 0.5
+        correctRejections = correctRejections + 0.5
 
-    if falseAlarms>0:
-        F = float(falseAlarms)/(falseAlarms+correctRejections)
+    if falseAlarms > 0:
+        F = (float(falseAlarms) /
+            (falseAlarms + correctRejections))
     else:
-        F = 0.5/(falseAlarms+correctRejections)
+        F = (0.5 / 
+            (falseAlarms + correctRejections))
 
     return F
 
 def normsinv(p):
-    """Returns the quantile function (aka percent point function/inverse cumulative distribution function)
+    """Returns the quantile function.
+    
+    This function is also known as the percent point function and
+    the inverse cumulative distribution function.
     >>> round(normsinv(0.1),7)
     -1.2815516
     >>> round(normsinv(0.15),7)
@@ -136,19 +139,26 @@ def normsinv(p):
               ((((d1 * q + d2) * q + d3) * q + d4) * q + 1)
     return z
 
-def dprime(hits, misses, falseAlarms, correctRejections, adjustment=False):
+def dprime(hits,
+           misses,
+           falseAlarms,
+           correctRejections,
+           adjustment = False):
     """Calculates and returns d'
-    >>> dprime(20,5,10,15)
+    >>> dprime(20, 5, 10, 15)
     1.09496834
-    >>> dprime(10,0,2,8)
+    >>> dprime(10, 0, 2, 8)
     2.48647486
-    >>> dprime(9,1,0,10)
+    >>> dprime(9, 1, 0, 10)
     2.92640519
-    >>> dprime(25,0,10,15,True)
+    >>> dprime(25, 0, 10, 15, True)
     2.31330601
     """
-    if hits == 0 and misses == 0 and correctRejections == 0 and falseAlarms == 0:
-        adjustment = True
+    if (hits == 0 and 
+        misses == 0 and 
+        correctRejections == 0 and 
+        falseAlarms == 0): 
+            adjustment = True
     H = Hrate(hits, misses, adjustment)
     F = Frate(falseAlarms, correctRejections, adjustment)
     zH = normsinv(H)
@@ -156,7 +166,7 @@ def dprime(hits, misses, falseAlarms, correctRejections, adjustment=False):
     if zH == None or zF == None:
         return -1
     dprime = zH - zF
-    return round(dprime,8)
+    return round(dprime, 8)
     
 if __name__ == "__main__":
     import doctest
