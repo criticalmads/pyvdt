@@ -43,27 +43,33 @@ def vmtRawScoreOutput(vmtOutput, outputFilename):
     outputCsv = csv.writer(open(outputFilename, 'ab'), dialect='excel')
     outputCsv.writerow(['TrialNumber',  # Stimulus serial number
 
-                        'Hit',              # Target detected?
+                        'Hit',              # Target detected? (binary)
                         'Miss',             # Target missed?
                         'FalseAlarm',       # ...and so on.
                         'CorrectRejection',
 
                         'ShownDigit',       # The digit shown on screen
 
-                        'Signal',           # Signal present?
+                        'Signal',           # Signal present? (binary)
                         'Decision',         # Participant's decision
 
                         'TrialDuration',   # Digit shown for x millisecs
 
                         'DigitStart',  # Time at start of presentation
-                        'DigitEnd',    # Time at end
+                        'DigitEnd',    # Time at end of presentation
                         'DigitDuration',  # Digit presentation duration
 
                         'DecisionTimestamp',  # Time at keypress
 
-                        'BlinkStart',         #
-                        'BlinkEnd',           #
-                        'BlinkDuration',      #
+                        # Here, "blink" refers to the single blank
+                        # frames shown between digit presentations.
+                        # The intention behind these is to allow
+                        # participants to notice the change when
+                        # identical digits are presented back-to-back.
+                        # See also: functions.py
+                        'BlinkStart',  # Time at start of blank frame
+                        'BlinkEnd',    # Time at end of blank frame
+                        'BlinkDuration',  # Blank frame duration
 
                         'RT'])  # Reaction time
 
